@@ -24,4 +24,15 @@ app.get('/test', (request, response) => {
 
 })
 
+app.get('/books', getBooks);
+async function getBooks(request, response) {
+  try{
+const books = await Book.find({});
+response.status(200).send(books);
+  } catch (error) {
+console.error(error);
+response.status(500).send('error occured in the server!')
+  };
+};
+
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
