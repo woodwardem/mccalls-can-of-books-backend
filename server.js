@@ -8,7 +8,7 @@ const Book = require('./models/books');
 
 const app = express();
 app.use(cors());
-
+app.use(express.json());
 const PORT = process.env.PORT || 3001;
 const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_CONNECTION);
@@ -25,6 +25,7 @@ app.get('/test', (request, response) => {
 })
 
 app.get('/books', getBooks);
+app.post('/books', createBook);
 async function getBooks(request, response) {
   try{
 const books = await Book.find({});
@@ -34,5 +35,13 @@ console.error(error);
 response.status(500).send('error occured in the server!')
   };
 };
-
+async function createBook(request, response) {
+  try {
+const book = await Book.create(request.body);
+response.status(201).send(book);
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('error occured in the server!');
+  }
+}
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
