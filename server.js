@@ -26,6 +26,10 @@ app.get('/test', (request, response) => {
 
 app.get('/books', getBooks);
 app.post('/books', createBook);
+
+app.delete('/books/:id', deleteBook);
+
+
 async function getBooks(request, response) {
   try{
 const books = await Book.find({});
@@ -44,4 +48,26 @@ response.status(201).send(book);
     response.status(500).send('error occured in the server!');
   }
 }
+
+async function deleteBook(request, response) {
+  try {
+
+  
+  const id = request.params.id;
+  console.log('request.params.id = ', id);
+
+await Book.findByIdAndDelete(id);
+response.status(204);
+console.log("Book Successfully deleted");
+} catch (error) {
+  console.error(error);
+    response.status(500).send('error occured in the server!');
+}
+
+}
+
+
+
+
+
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
